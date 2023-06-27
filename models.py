@@ -32,8 +32,8 @@ class Stock(Base):
     id_shop = sq.Column(sq.Integer, sq.ForeignKey('shop.id'), nullable=False)
     count = sq.Column(sq.Integer, nullable=False)
 
-    book = relationship(Book, 'stocks')
-    shop = relationship(Shop, 'stocks')
+    book = relationship(Book, backref='stocks')
+    shop = relationship(Shop, backref='stocks')
 
 class Sale(Base):
     __tablename__ = 'sale'
@@ -44,7 +44,16 @@ class Sale(Base):
     id_stock = sq.Column(sq.Integer, sq.ForeignKey('stock.id'), nullable=False)
     count = sq.Column(sq.Integer, nullable=False)
 
-    stock = relationship(Stock, 'sales')
+    stock = relationship(Stock, backref='sales')
 
 def create_tables(engine):
+    Base.metadata.bind = engine
     Base.metadata.create_all(engine)
+
+models_by_tablename = {
+    'publisher': Publisher,
+    'shop': Shop,
+    'book': Book,
+    'stock': Stock,
+    'sale': Sale,
+}
